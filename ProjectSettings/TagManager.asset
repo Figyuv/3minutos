@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Drag
+  - Golem
+  - Pato
   layers:
   - Default
   - TransparentFX

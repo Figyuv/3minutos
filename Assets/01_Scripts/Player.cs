@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -35,12 +36,17 @@ public class Player : MonoBehaviour
 
     Rigidbody rb;
 
+    public AudioClip diesfx;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
         readyToJump = true;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()
@@ -117,8 +123,29 @@ public class Player : MonoBehaviour
         readyToJump = true;
     }
 
-    private void Dead()
+    //check the collision with collithes that have the tag "lava"
+    private void OnCollisionEnter(Collision collision)
     {
-        Destroy(gameObject);
+        if (collision.gameObject.tag == "lava")
+        {
+            //play the sound
+            GameManager.instance.PlaySFX(diesfx);
+            //reload scene "lvl3"
+            StartCoroutine("espera");
+            SceneManager.LoadScene("Level_3");
+        }
+        if (collision.gameObject.tag == "finish")
+        {
+            //play the sound
+            GameManager.instance.PlaySFX(diesfx);
+            StartCoroutine("espera");
+            //reload scene "lvl3"
+            SceneManager.LoadScene("Thanks");
+        }
+    }
+
+    IEnumerator espera()
+    {
+        yield return new WaitForSeconds(2);
     }
 }
